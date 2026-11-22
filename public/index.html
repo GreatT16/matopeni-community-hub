@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matopeni Hub</title>
+<style>
+body{font-family:Arial;padding:15px;background:#f5f5f5}
+.card{background:white;padding:15px;margin:10px 0;border-radius:10px;box-shadow:0 2px 5px #ccc}
+.btn{display:inline-block;padding:8px 15px;margin:5px;border-radius:5px;text-decoration:none;color:white}
+.call{background:#007bff} .wa{background:#25D366}
+h1{color:#2c3e50}
+</style>
+</head>
+<body>
+<h1>🏘️ Matopeni Community Hub</h1>
+<p>Groceries, Mama Mboga, Laundry, Kinyozi, Mpesa - Call Direct!</p>
+<div id="list">Loading...</div>
+<script>
+fetch('/api/businesses').then(r=>r.json()).then(data=>{
+  let html='';
+  data.forEach(b=>{
+    let waNum = b.whatsapp.replace('0','254');
+    html+=`<div class="card">
+      <b>${b.name}</b> - ${b.category}<br>
+      📍 ${b.location}<br>
+      📞 ${b.phone}<br>
+      <a class="btn call" href="tel:${b.phone}">📞 Call</a>
+      <a class="btn wa" href="https://wa.me/${waNum}" target="_blank">💬 WhatsApp</a>
+    </div>`;
+  });
+  document.getElementById('list').innerHTML=html;
+});
+</script>
+</body>
+</html>
