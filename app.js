@@ -16,8 +16,8 @@ app.use('/api', routes);
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-
-app.use(notFound);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Matopeni Hub running on port ${PORT}`);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
