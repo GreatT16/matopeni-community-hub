@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const routes = require('./routes');
 const { logger } = require('./middleware/logger');
-const { notFound, errorHandler } = require('./middleware/errorHandler');
+const { notFound, errorHandler } = require('./middleware/error');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,11 +16,11 @@ app.use('/api', routes);
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Matopeni Hub running on port ${PORT}`);
+
+app.use(notFound);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Matopeni Hub running on port ${PORT}`);
 });
 
