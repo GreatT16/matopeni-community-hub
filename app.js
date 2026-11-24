@@ -1,17 +1,21 @@
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
-const routes = require('./routes');
-const { logger } = require('./middleware/logger');
+
+const logger = require('./middleware/logger');
 const { notFound, errorHandler } = require('./middleware/error');
+const routes = require('./routes');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(express.json());
-app.use(logger);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
 
+// handle both export styles
+app.use(typeof logger === 'function' ? logger : logger.logger || ((req,res,next)=>next()));
 app.use('/api', routes);
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -20,7 +24,8 @@ app.get('/', (req, res) => {
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(PORT, '0.0.0.0', () => {
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => {
   console.log(`Matopeni Hub running on port ${PORT}`);
 });
 
